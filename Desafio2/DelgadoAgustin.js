@@ -20,19 +20,27 @@ class Contenedor{
             });
         }
     }
+
+    //Guarda el producto en el archivo de la ruta del Contenedor
+    //Devuelve el id del producto guardado
     async save(producto){
         try{
+            //Mapeo el producto en un objeto con ID
             const productoConId = {
                 title: producto.title,
                 price: producto.price,
                 thumbnail: producto.thumbnail,
                 id: 0
             }
+
+            //Lectura del archivo
             const archivo = await fs.promises.readFile(this.nombreArchivo,'utf-8');
+            
+            //Intento parsear JSON, de lo contrario se sobreescribe
             let productos = []
             try{
                 productos = JSON.parse(archivo);
-                productoConId.id = productos[productos.length-1].id+1
+                productoConId.id = productos[productos.length-1].id+1  //Calculo del nuevo ID
                 productos.push(productoConId);
             }
             catch(err){
@@ -40,14 +48,17 @@ class Contenedor{
                 productos.push(productoConId);
             }
             
-            await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(productos,null,4))
-            console.log(`Producto Agregado con ID: ${productoConId.id}`)
+            //Guardo el arreglo de productos
+            await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(productos,null,4));
+
+            return productoConId.id;
         }
         catch(err){
             console.error(err);
         }
     }
 
+    //Devuelve el producto con el id correspondiente si existe
     async getById(id){
         try{
             const archivo = await fs.promises.readFile(this.nombreArchivo,'utf-8');
@@ -55,9 +66,10 @@ class Contenedor{
             const producto = productos.find(x => x.id==id);
             if(producto == undefined){
                 console.log("No existe producto con este ID");
+                return null;
             }
             else{
-                console.log(producto);
+                return producto;
             }
         }
         catch(err){
@@ -65,16 +77,20 @@ class Contenedor{
         }
     }
 
+    //Devuelve un arreglo con todos los productos en el archivo
     async getAll(){
         try{
             const archivo = await fs.promises.readFile(this.nombreArchivo,'utf-8');
             const productos = JSON.parse(archivo);
-            console.log(productos);
+            
+            return productos;
         }
         catch(err){
             console.error(err);
         }
     }
+
+    //Borra el producto con el id correspondiente si existe
     async deleteById(id){
         try{
             const archivo = await fs.promises.readFile(this.nombreArchivo,'utf-8');
@@ -86,17 +102,20 @@ class Contenedor{
             else{
                 productos.splice(indice,1);
                 await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(productos,null,4))
+                console.log('Producto Borrado con Exito')
             }
-            
         }
         catch(err){
             console.error(err);
         }
     }
+
+    //Sobreescribe el archivo con un arreglo vacio
     async deleteAll(){
         try{
             const productos = [];
             await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(productos,null,4));    
+            console.log('Todos los productos borrados con exito')
         }
         catch(err){
             console.error(err);
@@ -104,23 +123,39 @@ class Contenedor{
     }
 }
 
+//Variable Producto de Prueba para cargar el archivo
 const productoPrueba = {
     title: 'nombrePrueba',
     price: 123.12,
     thumbnail: 'https://lasrecetasdelchef.net/wp-content/uploads/2020/08/alfajor-triple.jpg'
 }
 
-const prueba = new Contenedor('prueba.txt')
+//Inicializacion de Contenedor
+const contenedorDePrueba = new Contenedor('prueba.txt')
 
-//NO USAR SAVE Y DELETE AL MISMO TIEMPO
+//Prueba de metodos
+const prueba = async ()=>{
+    //Guardar Producto
+    const indice = await contenedorDePrueba.save(productoPrueba);
+    console.log("Producto agregado con indice: " + indice);
 
-//prueba.save(productoPrueba)
+    //Mostrar producto por Id si existe
 
-//prueba.deleteById(1);
+    const producto = await contenedorDePrueba.getById(2);
+    if(producto!=null){
+        console.log(producto);
+    }
+    
 
-//prueba.getAll();
+    //Mostrar Todos los Productos
+    const productos = await contenedorDePrueba.getAll();
+    console.log(productos);
 
-// prueba.getById(10);
+    //Borrar producto si existe
+    await contenedorDePrueba.deleteById(2);
 
-prueba.deleteAll();
+    //Borrar Todos los Productos
+    await contenedorDePrueba.deleteAll();
+}
 
+prueba();
