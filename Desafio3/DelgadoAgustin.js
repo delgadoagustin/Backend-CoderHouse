@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const { get } = require('http');
 
 class Contenedor{
     constructor(nombreArchivo){
@@ -125,15 +126,28 @@ class Contenedor{
 }
 
 
+const contenedor = new Contenedor('productos.txt');
 
 
 const app = express()
 const PORT = 8080
 const server = app.listen(PORT, () => {
-    console.log(`Servidor http escuchando en el puerto ${server.address().port}`)
+    console.log(`BIENVENIDO`)
 })
 server.on("error", error => console.log(`Error en servidor ${error}`))
 
 app.get('/', (solicitud, respuesta) => {
-    respuesta.send({hola: 'mundo!'})
+    respuesta.send(console.log('hola'))
+})
+
+app.get('/productos', async(solicitud, respuesta) => {
+    const productos = await contenedor.getAll();
+    respuesta.send(productos)
+})
+
+app.get('/productoRandom', async(solicitud, respuesta) => {
+    const random = Math.floor((Math.random()*(4-1)+1));
+    console.log(random)
+    const producto = await contenedor.getById(random);
+    respuesta.send(producto)
 })
