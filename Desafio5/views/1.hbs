@@ -1,0 +1,16 @@
+<table>
+    <tr>
+        <th>ID</th>
+        <th>NOMBRE</th>
+        <th>PRECIO</th>
+        <th>IMAGEN</th>    
+    </tr>
+    {{#each lista}}
+        <tr>    
+            <td>{{this.id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.price}}</td>
+            <td>{{this.thumbnail}}</td>
+        </tr>
+    {{/each}}
+</table>
