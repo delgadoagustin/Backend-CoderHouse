@@ -1,0 +1,15 @@
+include layout/layout.pug
+table(class="table m-3")
+    tr
+        th ID 
+        th NOMBRE
+        th PRECIO 
+        th IMAGEN 
+    each val in lista 
+        tr 
+            td= val.id
+            td= val.name 
+            td= val.price 
+            td
+                img(src=val.thumbnail, alt="", srcset="")
+a(href="/" class="btn btn-primary m-3") Formulario

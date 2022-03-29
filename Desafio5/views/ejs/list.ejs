@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head'); %>
+</head>
+<body>
+    <table class="table m-3">
+        <tr>
+            <th>ID</th>
+            <th>NOMBRE</th>
+            <th>PRECIO</th>
+            <th>IMAGEN</th>    
+        </tr>
+        <% lista.forEach(function(el){ %>
+            <tr>    
+                <td><%=el.id%></td>
+                <td><%=el.name%></td>
+                <td><%=el.price%></td>
+                <td><img src=<%=el.thumbnail%> alt=""></td>
+            </tr>
+
+        <% }) %> 
+    </table>
+    <a href="/" class="btn btn-primary m-3">Formulario</a>
+</body>
+</html>

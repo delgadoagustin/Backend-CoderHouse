@@ -1,0 +1,13 @@
+include layout/layout.pug
+form(action="/productos" method="post" )
+    div(class="mb-3 m-3")
+        label(for="name")
+            input(type="text" name="title" placeholder="Nombre")
+    div(class="mb-3 m-3")
+        label(for="name")
+            input(type="text" name="price" placeholder="Precio")
+    div(class="mb-3 m-3")
+        label(for="name")
+            input(type="text" name="thumbnail" placeholder="Imagen URL")
+    input(type="submit" value="Agregar" class="m-3 btn btn-primary")     
+a(href="/productos" class="m-3 btn btn-primary") Lista de Productos

@@ -1,4 +1,4 @@
-<table>
+<table class="table m-3">
     <tr>
         <th>ID</th>
         <th>NOMBRE</th>
@@ -10,7 +10,8 @@
             <td>{{this.id}}</td>
             <td>{{this.name}}</td>
             <td>{{this.price}}</td>
-            <td>{{this.thumbnail}}</td>
+            <td><img src={{this.thumbnail}} alt="" srcset=""></td>
         </tr>
     {{/each}}
 </table>
+<a href="/" class="btn btn-primary m-3">Formulario</a>

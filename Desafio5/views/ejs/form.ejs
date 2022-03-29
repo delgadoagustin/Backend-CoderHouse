@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head'); %>
+</head>
+<body>
+    <form method="post" action="/productos">
+        <div class="mb-3 m-3">
+            <label for="title" class="form-label">Nombre: </label>
+            <input name="title" type="text" class="form-control">
+        </div>
+        <div class="mb-3 m-3">
+            <label for="price" class="form-label">Nombre: </label>
+            <input name="price" type="number" class="form-control">
+        </div>
+        <div class="mb-3 m-3">
+            <label for="thumbnail" class="form-label">Nombre: </label>
+            <input name="thumbnail" type="text" class="form-control">
+        </div>
+            
+        <input type="submit" value="Agregar" class="m-3 btn btn-primary">
+    </form>
+    <a href="/productos" class="m-3 btn btn-primary">Lista de Productos</a>
+</body>
+</html>
