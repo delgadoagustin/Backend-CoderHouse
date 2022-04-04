@@ -6,14 +6,16 @@ class Contenedor{
             this.nombreArchivo = './'+nombreArchivo;
         }
         else{
+            const mensajes = [];
+            this.nombreArchivo = './'+nombreArchivo;
             fs.writeFile('./'+nombreArchivo,'',err => {
                 if(err) throw new Error(err.message);
 
                 this.nombreArchivo = './'+nombreArchivo;
-                let mensajes = []
-                fs.writeFile(this.nombreArchivo,JSON.stringify(mensajes,null,4));
                 console.log('creado');
             });
+            
+            fs.writeFileSync(this.nombreArchivo,JSON.stringify(mensajes,null,4));
         }
     }
 
