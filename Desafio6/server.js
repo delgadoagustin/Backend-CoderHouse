@@ -4,11 +4,20 @@ const { Server: IOServer } = require("socket.io");
 const handlebars = require('express-handlebars');
 const Clases = require('./Producto');
 const path = require('path');
+const Archivo = require('./Archivo');
+
+
 const Producto = Clases.Producto;
 const Productos = Clases.Productos;
-
+const file = new Archivo.Contenedor('mensajes.json')
 const productos = new Productos();
-const messages = [];
+
+let messages = [];
+(async ()=>{
+    messages = await file.getAll();
+})();
+console.log(messages);
+
 
 const app = express();
 const httpServer = new HttpServer(app);
@@ -25,8 +34,6 @@ httpServer.listen(8080, ()=>{
     console.log("Servidor corriendo en http://localhost:8080");
 })
 
-
-
 io.on('connection', socket=>{
     console.log('Un cliente se ha conectado');
     socket.emit('messages',messages)
@@ -34,6 +41,7 @@ io.on('connection', socket=>{
 
     socket.on("new-message", (data) => {
         messages.push(data);
+        file.save(data);
         io.sockets.emit("messages", messages);
       });
 

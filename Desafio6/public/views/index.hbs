@@ -21,14 +21,25 @@
             <th>PRECIO</th>
             <th>IMAGEN</th>    
         </tr>
-        <div id="products"></div>
+        <tbody id="products">
+            <td>Empty</td>
+            <td>Empty</td>
+            <td>Empty</td>
+        </tbody>
     </table>    
 </form>
 
 
 <form onsubmit="return addMessage(this)">
-    <input type="text" id="username" placeholder="Email" >
-    <div id="messages"></div>
-    <input type="text" id="texto" placeholder="Ingresá un mensaje...">
-    <input type="submit" value="Enviar">
+    <div class="mb-3 m-3">
+        <label for="username" class="form-label">Correo: </label>
+        <input name="username" id="username" type="text" class="form-control" placeholder="Email">
+    </div>
+    <br>
+    <div id="messages" class="alert alert-secondary mb-3 m-3"></div>
+    <div class="mb-3 m-3">
+        <label for="texto" class="form-label">Mensaje: </label>
+        <input name="texto" id="texto" type="text" class="form-control" placeholder="Ingresá un mensaje...">
+    </div>
+    <input type="submit" value="Enviar" class="m-3 btn btn-primary">
 </form>

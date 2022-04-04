@@ -5,20 +5,16 @@ function render(data,id) {
     if(id=='messages'){
         html = data.map(elem => {
             return(`<div>
-                <strong>${elem.author}</strong>:
-                <i>${elem.date}</i>
-                <em>${elem.text}</em> </div>`)
+                <strong class="text-primary">${elem.author}</strong>:
+                <span class="text-danger">${elem.date}: </span>
+                <em class="text-success">${elem.text}</em> </div>`)
         }).join(" ");
     }
     else if(id=='products'){
         html = data.productos.map(elem => {
-            return(`<div>
-            <tr>
-            <td>${elem.name}</td>
+            return(`<tr><td>${elem.name}</td>
             <td>${elem.price}</td>
-            <td>${elem.thumbnail}</td> 
-            </tr>
-            </div>`)
+            <td><img class="img-thumbnail" src=${elem.thumbnail}></td></tr>`)
         }).join(" ");
     }
     
@@ -31,7 +27,7 @@ socket.on('products', function(data) { render(data,'products'); });
 function addMessage(e) {
     const mensaje = {
         author: document.getElementById('username').value,
-        date: Date.now(),
+        date: new Date().toLocaleString(),
         text: document.getElementById('texto').value
     };
     socket.emit('new-message', mensaje);
