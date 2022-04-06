@@ -1,5 +1,5 @@
+const { Contenedor } = require("./Archivo");
 const { Productos } = require("./Producto");
-const { Producto } = require("./Producto");
 
 
 class Carrito{
@@ -24,31 +24,52 @@ class Carrito{
 
 class Carritos{
     constructor(){
-        this.carritos = []
+        this.carritos = new Contenedor('Carritos.json');
     }
 
     agregarCarrito(carrito){
-        this.carritos.push(carrito)
+        this.carritos.save(carrito)
     }
 
     listarCarrito(){
-        return this.carritos
+        let lista = [];
+        (async ()=>{
+            lista = await this.carritos.getAll();
+        })();
+        return lista;
     }
 
     listarCarritoPorID(id){
-        return this.carritos.find(x => x.id == id)
+        let lista = [];
+        (async ()=>{
+            lista = await this.carritos.getAll();
+        })();
+        return lista.find(x => x.id == id)
     }
 
     borrarCarritoPorID(id){
-        const indice = this.carritos.findIndex(x => x.id == id)
-        this.carritos.splice(indice,1)
+        let lista = [];
+        (async ()=>{
+            lista = await this.carritos.getAll();
+        })();
+        const indice = lista.findIndex(x => x.id == id)
+        lista.splice(indice,1)
     }
 
     obtenerIDMax(){
-        if(this.carritos.length==0){
-            return 0;
-        }
-        const ids = this.carritos.map(x => {return x.id})
+        let lista = [];
+        let ids = 0;
+        (async ()=>{
+            lista = await this.carritos.getAll();
+            if(lista.length==0){
+                return 0;
+            }
+            ids = lista.map(x => {return x.id})
+        })();
+        // if(lista.length==0){
+        //     return 0;
+        // }
+        // ids = lista.map(x => {return x.id})
         return Math.max(...ids)
     }
 }
