@@ -37,8 +37,14 @@ routerCarrito.get('/:id/productos', (req, res) => {
 //Agrega un producto al carrito por id
 routerCarrito.post('/:id/productos',(req, res) => {
     const id = req.params.id;
-    const carro = carritos.obtenerCarritoPorID();
-    carro.agregarProducto(listaProductos.listarProductoPorID(id))
+    const id_prod = req.body.id_prod;
+    const carro = listaCarritos.listarCarritoPorID(id);
+    const nuevo = new Carrito(id)
+    nuevo.productos = nuevo.productos.concat(carro.productos)
+    nuevo.agregarProducto(listaProductos.listarProductoPorID(id_prod))
+    
+    listaCarritos.borrarCarritoPorID(id);
+    listaCarritos.agregarCarrito(nuevo);
     res.json({
         result: 'Producto Agregado'
     })
@@ -46,11 +52,16 @@ routerCarrito.post('/:id/productos',(req, res) => {
 
 
 //Elimina un producto según su ID
-routerCarrito.delete('/:id', (req, res) => {
+routerCarrito.delete('/:id/productos/:id_prod', (req, res) => {
     const id = req.params.id
     const id_prod = req.params.id_prod
-    const carro = carritos.obtenerCarritoPorID(id);
-    carro.productos.borrarProductoPorID(id_prod);
+    const carro = listaCarritos.listarCarritoPorID(id);
+    const nuevo = new Carrito(id)
+    nuevo.productos = nuevo.productos.concat(carro.productos)
+    nuevo.borrarProductoPorID(id_prod)
+
+    listaCarritos.borrarCarritoPorID(id);
+    listaCarritos.agregarCarrito(nuevo);
     res.json({
         result: 'Producto Borrado',
         ID: id

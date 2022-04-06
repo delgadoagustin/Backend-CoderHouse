@@ -58,7 +58,7 @@ class Contenedor{
             else{
                 arreglo.splice(indice,1);
                 fs.writeFileSync(this.nombreArchivo,JSON.stringify(arreglo,null,4))
-                console.log('Producto Borrado con Exito')
+                //console.log('Elemento Borrado con Exito')
             }
         }
         catch(err){

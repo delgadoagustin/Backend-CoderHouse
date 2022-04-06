@@ -44,13 +44,22 @@ routerProductos.post('/', (req, res) => {
 //Recibe y actualiza un producto según su ID
 routerProductos.put('/:id', (req, res) => {
     const id = req.params.id
-    const title = req.body.title
+    const name = req.body.name
+    const description = req.body.description
+    const code = req.body.code
     const price = req.body.price
+    const stock = req.body.stock
     const thumbnail = req.body.thumbnail
     let prod = listaProductos.listarProductoPorID(id)
     if(prod != null){
         listaProductos.borrarProductoPorID(id)
-        prod = new Producto(id,title,price,thumbnail)
+        prod = new Producto(id,
+                            name,
+                            description,
+                            code,
+                            price,
+                            stock,
+                            thumbnail)
         listaProductos.agregarProducto(prod)
         res.json({
             result: 'Actualizado',

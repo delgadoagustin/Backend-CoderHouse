@@ -19,7 +19,9 @@ class Carrito{
 
     borrarProductoPorID(id){
         const indice = this.productos.findIndex(x => x.id == id)
-        this.productos.splice(indice,1);
+        if(indice!=-1){
+            this.productos.splice(indice,1);
+        }
     }
 }
 
@@ -43,9 +45,7 @@ class Carritos{
     }
 
     borrarCarritoPorID(id){
-        let lista = this.carritos.getAll();
-        const indice = lista.findIndex(x => x.id == id)
-        lista.splice(indice,1)
+        this.carritos.deleteById(id)
     }
 
     obtenerIDMax(){
