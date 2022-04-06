@@ -1,5 +1,10 @@
-const Carrito = require('../entities/Carrito')
+const Clases = require('../../entities/Producto')
 var express = require('express')
+
+const Productos = Clases.Productos;
+const Producto = Clases.Producto;
+
+const productos = new Productos();
 
 var routerProductos = new express.Router()
 
@@ -22,10 +27,19 @@ routerProductos.get('/:id', (req, res) => {
 
 //Recibe y agrega un producto, y lo devuelve con su ID asignado
 routerProductos.post('/', (req, res) => {
-    const title = req.body.title
+    const name = req.body.name
+    const description = req.body.description
+    const code = req.body.code
     const price = req.body.price
+    const stock = req.body.stock
     const thumbnail = req.body.thumbnail
-    const prod = new Producto(productos.obtenerIDMax()+1,title,price,thumbnail)
+    const prod = new Producto(productos.obtenerIDMax()+1,
+                            name,
+                            description,
+                            code,
+                            price,
+                            stock,
+                            thumbnail)
     productos.agregarProducto(prod)
     res.json(productos.listarProductoPorID(productos.obtenerIDMax()))
 })
