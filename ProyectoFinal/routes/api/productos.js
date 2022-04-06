@@ -1,22 +1,19 @@
-const Clases = require('../../entities/Producto')
 var express = require('express')
+const { Producto, listaProductos } = require('../../entities/Producto')
 
-const Productos = Clases.Productos;
-const Producto = Clases.Producto;
 
-const productos = new Productos();
 
 var routerProductos = new express.Router()
 
 //Devuelve todos los productos
 routerProductos.get('/', (req, res) => {
-    res.json(productos.listarProductos())
+    res.json(listaProductos.listarProductos())
 })
 
 //Devuelve un producto segun ID
 routerProductos.get('/:id', (req, res) => {
     const id = req.params.id
-    const prod = productos.listarProductoPorID(id)
+    const prod = listaProductos.listarProductoPorID(id)
     if(prod != null){
         res.json(prod)
     }
@@ -33,15 +30,15 @@ routerProductos.post('/', (req, res) => {
     const price = req.body.price
     const stock = req.body.stock
     const thumbnail = req.body.thumbnail
-    const prod = new Producto(productos.obtenerIDMax()+1,
+    const prod = new Producto(listaProductos.obtenerIDMax()+1,
                             name,
                             description,
                             code,
                             price,
                             stock,
                             thumbnail)
-    productos.agregarProducto(prod)
-    res.json(productos.listarProductoPorID(productos.obtenerIDMax()))
+    listaProductos.agregarProducto(prod)
+    res.json(listaProductos.listarProductoPorID(listaProductos.obtenerIDMax()))
 })
 
 //Recibe y actualiza un producto según su ID
@@ -50,11 +47,11 @@ routerProductos.put('/:id', (req, res) => {
     const title = req.body.title
     const price = req.body.price
     const thumbnail = req.body.thumbnail
-    let prod = productos.listarProductoPorID(id)
+    let prod = listaProductos.listarProductoPorID(id)
     if(prod != null){
-        productos.borrarProductoPorID(id)
+        listaProductos.borrarProductoPorID(id)
         prod = new Producto(id,title,price,thumbnail)
-        productos.agregarProducto(prod)
+        listaProductos.agregarProducto(prod)
         res.json({
             result: 'Actualizado',
             producto: prod,
@@ -69,7 +66,7 @@ routerProductos.put('/:id', (req, res) => {
 //Elimina un producto según su ID
 routerProductos.delete('/:id', (req, res) => {
     const id = req.params.id
-    productos.borrarProductoPorID(id)
+    listaProductos.borrarProductoPorID(id)
     res.json({
         result: 'Borrado',
         ID: id

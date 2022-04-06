@@ -1,10 +1,7 @@
 var express = require('express')
-const { Carrito } = require('../../entities/Carrito')
-const { Carritos } = require('../../entities/Carrito');
-const { Productos } = require('../../entities/Producto');
+const { Carrito, listaCarritos } = require('../../entities/Carrito');
+const { listaProductos } = require('../../entities/Producto');
 
-
-const listaCarritos = new Carritos();
 
 var routerCarrito = new express.Router()
 
@@ -41,7 +38,7 @@ routerCarrito.get('/:id/productos', (req, res) => {
 routerCarrito.post('/:id/productos',(req, res) => {
     const id = req.params.id;
     const carro = carritos.obtenerCarritoPorID();
-    carro.agregarProducto(productos.listarProductoPorID(id))
+    carro.agregarProducto(listaProductos.listarProductoPorID(id))
     res.json({
         result: 'Producto Agregado'
     })

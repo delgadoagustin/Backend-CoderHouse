@@ -1,3 +1,5 @@
+const { Contenedor } = require("./Archivo");
+
 class Producto{
     constructor(id, name, description, code, price, stock, thumbnail){
         this.id = id;
@@ -13,34 +15,37 @@ class Producto{
 
 class Productos{
     constructor(){
-        this.productos = []
+        this.productos = new Contenedor('Productos.json')
     }
 
     agregarProducto(producto){
-        this.productos.push(producto)
+        this.productos.save(producto);
     }
 
     listarProductos(){
-        return this.productos
+        return this.productos.getAll();
     }
 
     listarProductoPorID(id){
-        return this.productos.find(x => x.id == id)
+        return this.productos.getAll().find(x => x.id == id)
     }
 
     borrarProductoPorID(id){
-        const indice = this.productos.findIndex(x => x.id == id)
-        this.productos.splice(indice,1)
+        this.productos.deleteById(id);
     }
 
     obtenerIDMax(){
-        if(this.productos.length==0){
+        const lista =this.productos.getAll();
+        if(lista.length==0){
             return 0;
         }
-        const ids = this.productos.map(x => {return x.id})
+        const ids = lista.map(x => {return x.id})
         return Math.max(...ids)
     }
 }
 
+const listaProductos = new Productos();
+
 module.exports.Producto = Producto;
 module.exports.Productos = Productos;
+module.exports.listaProductos = listaProductos;

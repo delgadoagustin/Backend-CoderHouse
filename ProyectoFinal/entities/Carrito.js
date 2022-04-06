@@ -6,11 +6,11 @@ class Carrito{
     constructor(id){
         this.id = id;
         this.timestamp = Date.now();
-        this.productos = new Productos();
+        this.productos = [];
     }
 
     agregarProducto(producto){
-        this.productos.agregarProducto(producto);
+        this.productos.push(producto);
     }
 
     listarProductos(){
@@ -18,7 +18,8 @@ class Carrito{
     }
 
     borrarProductoPorID(id){
-        this.productos.borrarProductoPorID(id);
+        const indice = this.productos.findIndex(x => x.id == id)
+        this.productos.splice(indice,1);
     }
 }
 
@@ -32,49 +33,33 @@ class Carritos{
     }
 
     listarCarrito(){
-        let lista = [];
-        (async ()=>{
-            lista = await this.carritos.getAll();
-        })();
+        let lista = this.carritos.getAll();
         return lista;
     }
 
     listarCarritoPorID(id){
-        let lista = [];
-        (async ()=>{
-            lista = await this.carritos.getAll();
-        })();
+        let lista = this.carritos.getAll();
         return lista.find(x => x.id == id)
     }
 
     borrarCarritoPorID(id){
-        let lista = [];
-        (async ()=>{
-            lista = await this.carritos.getAll();
-        })();
+        let lista = this.carritos.getAll();
         const indice = lista.findIndex(x => x.id == id)
         lista.splice(indice,1)
     }
 
     obtenerIDMax(){
-        let lista = [];
-        let ids = 0;
-        (async ()=>{
-            lista = await this.carritos.getAll();
-            if(lista.length==0){
-                return 0;
-            }
-            ids = lista.map(x => {return x.id})
-        })();
-        // if(lista.length==0){
-        //     return 0;
-        // }
-        // ids = lista.map(x => {return x.id})
+        let lista = this.carritos.getAll();
+        if(lista.length==0){
+            return 0;
+        }
+        const ids = lista.map(x => {return x.id})
         return Math.max(...ids)
     }
 }
 
-
+const listaCarritos = new Carritos();
 
 module.exports.Carrito = Carrito;
 module.exports.Carritos = Carritos;
+module.exports.listaCarritos = listaCarritos

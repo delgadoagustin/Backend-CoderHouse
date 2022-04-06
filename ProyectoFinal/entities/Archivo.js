@@ -13,10 +13,10 @@ class Contenedor{
         }
     }
 
-    async save(data){
+    save(data){
         try{
             
-            const archivo = await fs.promises.readFile(this.nombreArchivo,'utf-8');
+            const archivo = fs.readFileSync(this.nombreArchivo,'utf-8');
             
             let arreglo = []
             try{
@@ -27,7 +27,7 @@ class Contenedor{
                 arreglo.push(data);
             }
             
-            await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(arreglo,null,4));
+            fs.writeFileSync(this.nombreArchivo,JSON.stringify(arreglo,null,4));
 
             return null;
         }
@@ -36,9 +36,9 @@ class Contenedor{
         }
     }
 
-    async getAll(){
+    getAll(){
         try{
-            const archivo = await fs.promises.readFile(this.nombreArchivo,'utf-8');
+            const archivo = fs.readFileSync(this.nombreArchivo,'utf-8');
             const arreglo = JSON.parse(archivo);
             return arreglo;
         }
@@ -47,9 +47,9 @@ class Contenedor{
         }
     }
     //Borra el elemento con el id correspondiente si existe
-    async deleteById(id){
+    deleteById(id){
         try{
-            const archivo = await fs.promises.readFile(this.nombreArchivo,'utf-8');
+            const archivo = fs.readFileSync(this.nombreArchivo,'utf-8');
             const arreglo = JSON.parse(archivo);
             const indice = arreglo.findIndex(x => x.id==id);
             if(indice == -1){
@@ -57,7 +57,7 @@ class Contenedor{
             }
             else{
                 arreglo.splice(indice,1);
-                await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(arreglo,null,4))
+                fs.writeFileSync(this.nombreArchivo,JSON.stringify(arreglo,null,4))
                 console.log('Producto Borrado con Exito')
             }
         }
@@ -67,10 +67,10 @@ class Contenedor{
     }
 
     //Sobreescribe el archivo con un arreglo vacio
-    async deleteAll(){
+    deleteAll(){
         try{
             const productos = [];
-            await fs.promises.writeFile(this.nombreArchivo,JSON.stringify(productos,null,4));    
+            fs.writeFileSync(this.nombreArchivo,JSON.stringify(productos,null,4));    
             console.log('Todos los productos borrados con exito')
         }
         catch(err){
