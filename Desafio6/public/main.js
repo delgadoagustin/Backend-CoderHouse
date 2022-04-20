@@ -11,7 +11,7 @@ function render(data,id) {
         }).join(" ");
     }
     else if(id=='products'){
-        html = data.productos.map(elem => {
+        html = data.map(elem => {
             return(`<tr><td>${elem.name}</td>
             <td>${elem.price}</td>
             <td><img class="img-thumbnail" src=${elem.thumbnail}></td></tr>`)
@@ -36,7 +36,7 @@ function addMessage(e) {
 
 function addProduct(e){
     const prod = {
-        title: document.getElementById('title').value,
+        name: document.getElementById('name').value,
         price: document.getElementById('price').value,
         thumbnail: document.getElementById('thumbnail').value
     };

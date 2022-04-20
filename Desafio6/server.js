@@ -1,22 +1,22 @@
 const express = require('express');
+const { options } = require('./options/mariaDB');
 const { Server: HttpServer } = require("http");
 const { Server: IOServer } = require("socket.io");
 const handlebars = require('express-handlebars');
 const Clases = require('./Producto');
 const path = require('path');
-const Archivo = require('./Archivo');
+const Repositorio = require('./Repositorio')
+//const Archivo = require('./Archivo');
 
 
 const Producto = Clases.Producto;
-const Productos = Clases.Productos;
-const file = new Archivo.Contenedor('mensajes.json')
-const productos = new Productos();
+// const Productos = Clases.Productos;
+// const productos = new Productos();
+const productos = new Repositorio.Repositorio(options,'productos');
+const mensajes = new Repositorio.Repositorio(options,'mensajes');
 
-let messages = [];
-(async ()=>{
-    messages = await file.getAll();
-})();
-console.log(messages);
+let products = productos.getAll();
+let messages = mensajes.getAll();
 
 
 const app = express();
@@ -37,18 +37,18 @@ httpServer.listen(8080, ()=>{
 io.on('connection', socket=>{
     console.log('Un cliente se ha conectado');
     socket.emit('messages',messages)
-    socket.emit('products',productos)
+    socket.emit('products',products)
 
     socket.on("new-message", (data) => {
         messages.push(data);
-        file.save(data);
+        mensajes.save(data);
         io.sockets.emit("messages", messages);
       });
 
     socket.on('new-product', (data)=>{
-        const prod = new Producto(productos.obtenerIDMax()+1,data.title,data.price,data.thumbnail);
-        productos.agregarProducto(prod);
-        io.sockets.emit("products",productos);
+        productos.save(data);
+        products.push(data);
+        io.sockets.emit("products",products);
     });
 })
 
