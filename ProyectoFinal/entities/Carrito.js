@@ -1,5 +1,4 @@
 const { Contenedor } = require("./Archivo");
-const { Productos } = require("./Producto");
 
 
 class Carrito{
@@ -11,6 +10,10 @@ class Carrito{
 
     agregarProducto(producto){
         this.productos.push(producto);
+    }
+
+    agregarProductos(productos){
+        this.productos = this.productos.concat(productos);
     }
 
     listarProductos(){

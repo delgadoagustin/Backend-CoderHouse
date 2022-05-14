@@ -1,6 +1,7 @@
 var express = require('express')
 const { Carrito, listaCarritos } = require('../../entities/Carrito');
 const { listaProductos } = require('../../entities/Producto');
+const { productosApi, carritoApi } = require('../../entities/daos');
 
 
 var routerCarrito = new express.Router()
@@ -36,11 +37,11 @@ routerCarrito.get('/:id/productos', (req, res) => {
 
 //Agrega un producto al carrito por id
 routerCarrito.post('/:id/productos',(req, res) => {
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
     const id_prod = req.body.id_prod;
     const carro = listaCarritos.listarCarritoPorID(id);
     const nuevo = new Carrito(id)
-    nuevo.productos = nuevo.productos.concat(carro.productos)
+    nuevo.agregarProductos(carro.productos)
     nuevo.agregarProducto(listaProductos.listarProductoPorID(id_prod))
     
     listaCarritos.borrarCarritoPorID(id);
@@ -57,7 +58,7 @@ routerCarrito.delete('/:id/productos/:id_prod', (req, res) => {
     const id_prod = req.params.id_prod
     const carro = listaCarritos.listarCarritoPorID(id);
     const nuevo = new Carrito(id)
-    nuevo.productos = nuevo.productos.concat(carro.productos)
+    nuevo.agregarProductos(carro.productos)
     nuevo.borrarProductoPorID(id_prod)
 
     listaCarritos.borrarCarritoPorID(id);

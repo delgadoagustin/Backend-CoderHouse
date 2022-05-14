@@ -1,4 +1,5 @@
-const Clases = require('../../Producto')
+const Producto = require('../../entities/Producto')
+//const Productos = require('../../entities/Producto')
 var express = require('express')
 
 var routerProductos = new express.Router()

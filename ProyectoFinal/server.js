@@ -14,7 +14,5 @@ const server = app.listen(PORT, () => {
  })
 server.on("error", error => console.log(`Error en servidor ${error}`));
 
-
-
 app.use('/api/productos',routerProductos);
 app.use('/api/carrito',routerCarrito);

@@ -1,7 +1,15 @@
 var express = require('express')
 const { Producto, listaProductos } = require('../../entities/Producto')
+const { productosApi, carritoApi } = require('../../entities/daos');
 
+// const admin = false;
 
+// const middleware = {
+//     ingreso : function(){
+//         if(admin) return next();
+//         res.redirect('/')
+//     }
+// }
 
 var routerProductos = new express.Router()
 
@@ -24,42 +32,35 @@ routerProductos.get('/:id', (req, res) => {
 
 //Recibe y agrega un producto, y lo devuelve con su ID asignado
 routerProductos.post('/', (req, res) => {
-    const name = req.body.name
-    const description = req.body.description
-    const code = req.body.code
-    const price = req.body.price
-    const stock = req.body.stock
-    const thumbnail = req.body.thumbnail
-    const prod = new Producto(listaProductos.obtenerIDMax()+1,
-                            name,
-                            description,
-                            code,
-                            price,
-                            stock,
-                            thumbnail)
+    const id = listaProductos.obtenerIDMax()+1;
+    const prod = new Producto(
+        id,
+        req.body.name,
+        req.body.description,
+        req.body.code,
+        req.body.price,
+        req.body.stock,
+        req.body.thumbnail
+        );
     listaProductos.agregarProducto(prod)
-    res.json(listaProductos.listarProductoPorID(listaProductos.obtenerIDMax()))
+    res.json(listaProductos.listarProductoPorID(id))
 })
 
 //Recibe y actualiza un producto según su ID
 routerProductos.put('/:id', (req, res) => {
-    const id = req.params.id
-    const name = req.body.name
-    const description = req.body.description
-    const code = req.body.code
-    const price = req.body.price
-    const stock = req.body.stock
-    const thumbnail = req.body.thumbnail
+    const id = parseInt(req.params.id);
     let prod = listaProductos.listarProductoPorID(id)
     if(prod != null){
         listaProductos.borrarProductoPorID(id)
-        prod = new Producto(id,
-                            name,
-                            description,
-                            code,
-                            price,
-                            stock,
-                            thumbnail)
+        prod = new Producto(
+            id,
+            req.body.name,
+            req.body.description,
+            req.body.code,
+            req.body.price,
+            req.body.stock,
+            req.body.stock
+            );
         listaProductos.agregarProducto(prod)
         res.json({
             result: 'Actualizado',
