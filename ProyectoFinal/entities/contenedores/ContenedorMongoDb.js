@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Productos } = require('../Producto');
 
 try {
     mongoose.connect(
@@ -8,50 +9,54 @@ try {
             useUnifiedTopology: true
         }
     )
+    console.log("siiiii")
 } 
 catch (error) {
     
 }
 
-export default class ContenedorMongoDb{
+class ContenedorMongoDb{
     constructor(collection, schema){
         this.collection = mongoose.model(collection, schema)
     }
 
-    save(data){
+    async save(data){
         try{
             const nuevo = new this.collection(data);
-            nuevo.save();
+            await nuevo.save();
         }
         catch(err){
             console.error(err);
         }
     }
 
-    getAll(){
+    async getAll(){
         try{
-            return this.collection.find()
+            let all = await this.collection.find({})
+            return all;
         }
         catch(err){
             console.error(err);
         }
     }
 
-    deleteById(id){
+    async deleteById(id){
         try{
-            this.collection.deleteOne({id: id});
+            await this.collection.deleteOne({_id: id});
         }
         catch(err){
             console.error(err);
         }
     }
 
-    deleteAll(){
+    async deleteAll(){
         try{
-            this.collection.deleteMany()
+            await this.collection.deleteMany()
         }
         catch(err){
             console.error(err);
         }
     }
 }
+
+module.exports = ContenedorMongoDb

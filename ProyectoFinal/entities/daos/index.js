@@ -1,7 +1,7 @@
-const MongoDbProductos = require("./productos/mongoDbProductos")
+const MongoDbProductos = require('./productos/mongoDbProductos')
 const FirebaseProductos = require("./productos/firebaseProductos")
-const MongoDbCarritos = require("./productos/mongoDbCarritos")
-const FirebaseCarritos = require("./productos/firebaseCarritos")
+const MongoDbCarritos = require('./carritos/mongoDbCarritos')
+const FirebaseCarritos = require('./carritos/firebaseCarritos')
 
 let productosApi = new MongoDbProductos()
 let carritoApi = new MongoDbCarritos()

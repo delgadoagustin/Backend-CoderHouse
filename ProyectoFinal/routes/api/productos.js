@@ -14,8 +14,10 @@ const { productosApi, carritoApi } = require('../../entities/daos');
 var routerProductos = new express.Router()
 
 //Devuelve todos los productos
-routerProductos.get('/', (req, res) => {
-    res.json(listaProductos.listarProductos())
+routerProductos.get('/', async (req, res) => {
+    const productos = await productosApi.getAll();
+    res.json(productos);
+    //res.json(listaProductos.listarProductos())
 })
 
 //Devuelve un producto segun ID
@@ -31,7 +33,7 @@ routerProductos.get('/:id', (req, res) => {
 })
 
 //Recibe y agrega un producto, y lo devuelve con su ID asignado
-routerProductos.post('/', (req, res) => {
+routerProductos.post('/', async (req, res) => {
     const id = listaProductos.obtenerIDMax()+1;
     const prod = new Producto(
         id,
@@ -42,8 +44,11 @@ routerProductos.post('/', (req, res) => {
         req.body.stock,
         req.body.thumbnail
         );
-    listaProductos.agregarProducto(prod)
-    res.json(listaProductos.listarProductoPorID(id))
+    productosApi.save(prod);
+    let all = await productosApi.getAll()
+    res.json(all)
+    //listaProductos.agregarProducto(prod)
+    //res.json(listaProductos.listarProductoPorID(id))
 })
 
 //Recibe y actualiza un producto según su ID
@@ -76,7 +81,8 @@ routerProductos.put('/:id', (req, res) => {
 //Elimina un producto según su ID
 routerProductos.delete('/:id', (req, res) => {
     const id = req.params.id
-    listaProductos.borrarProductoPorID(id)
+    // listaProductos.borrarProductoPorID(id)
+    productosApi.deleteById(id);
     res.json({
         result: 'Borrado',
         ID: id

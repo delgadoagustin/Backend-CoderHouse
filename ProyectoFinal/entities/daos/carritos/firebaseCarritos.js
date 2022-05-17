@@ -1,7 +1,9 @@
-import ContenedorFirebase from '../../contenedores/ContenedorFirebase.js'
+const ContenedorFirebase = require('../../contenedores/ContenedorFirebase')
 
-export default class FirebaseCarritos extends ContenedorFirebase {
+class FirebaseCarritos extends ContenedorFirebase {
   constructor() {
     super('carritos')
   }
 }
+
+module.exports = FirebaseCarritos

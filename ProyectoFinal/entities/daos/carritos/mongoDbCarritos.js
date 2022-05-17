@@ -1,4 +1,5 @@
-import ContenedorMongoDb from '../../contenedores/ContenedorMongoDb'
+const ContenedorMongoDb = require('../../contenedores/ContenedorMongoDb');
+const mongoose = require('mongoose');
 
 //-------
 //COPIA DE PRODUCTOSCHEMA PARA ARRAY DE PRODUCTOS EN CARRITO
@@ -19,8 +20,10 @@ const CarritoSchema = mongoose.Schema({
     productos: [ProductoSchema]
 })
 
-export default class MongoDbCarritos extends ContenedorMongoDb {
+class MongoDbCarritos extends ContenedorMongoDb {
   constructor() {
     super('carritos',CarritoSchema)
   }
 }
+
+module.exports = MongoDbCarritos
