@@ -16,3 +16,8 @@ server.on("error", error => console.log(`Error en servidor ${error}`));
 
 app.use('/api/productos',routerProductos);
 app.use('/api/carrito',routerCarrito);
+
+app.use((req, res, next) => {
+    res.status(404).send('Sorry cant find that!');
+  });
+  

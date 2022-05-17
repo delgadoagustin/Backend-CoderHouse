@@ -9,7 +9,7 @@ try {
             useUnifiedTopology: true
         }
     )
-    console.log("siiiii")
+    console.log("Conectado")
 } 
 catch (error) {
     
@@ -24,9 +24,28 @@ class ContenedorMongoDb{
         try{
             const nuevo = new this.collection(data);
             await nuevo.save();
+            return nuevo;
         }
         catch(err){
             console.error(err);
+        }
+    }
+
+    async getById(id){
+        try {
+            let doc = await this.collection.findOne({_id: id})
+            return doc;
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async exist(id){
+        try {
+            return this.collection.exists({_id: id});
+
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -37,6 +56,14 @@ class ContenedorMongoDb{
         }
         catch(err){
             console.error(err);
+        }
+    }
+
+    async updateById(id, doc){
+        try {
+            await this.collection.findOneAndUpdate({_id: id},doc)
+        } catch (error) {
+            console.error(error);
         }
     }
 

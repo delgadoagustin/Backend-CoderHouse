@@ -2,14 +2,16 @@ var express = require('express')
 const { Producto, listaProductos } = require('../../entities/Producto')
 const { productosApi, carritoApi } = require('../../entities/daos');
 
-// const admin = false;
+const admin = true;
 
-// const middleware = {
-//     ingreso : function(){
-//         if(admin) return next();
-//         res.redirect('/')
-//     }
-// }
+const checkAdmin = (req, res, next) => {
+    if (admin) {
+        return next()
+    }
+    else {
+        res.status(403).json({message: 'Can\'t Access this route '})
+    }
+}
 
 var routerProductos = new express.Router()
 
@@ -17,15 +19,15 @@ var routerProductos = new express.Router()
 routerProductos.get('/', async (req, res) => {
     const productos = await productosApi.getAll();
     res.json(productos);
-    //res.json(listaProductos.listarProductos())
 })
 
 //Devuelve un producto segun ID
-routerProductos.get('/:id', (req, res) => {
+routerProductos.get('/:id', async(req, res) => {
     const id = req.params.id
-    const prod = listaProductos.listarProductoPorID(id)
-    if(prod != null){
-        res.json(prod)
+    //const doc = listaProductos.listarProductoPorID(id)
+    const doc = await productosApi.getById(id)
+    if(doc != null){
+        res.json(doc)
     }
     else{
         res.json({error: 'producto no encontrado'})
@@ -33,10 +35,9 @@ routerProductos.get('/:id', (req, res) => {
 })
 
 //Recibe y agrega un producto, y lo devuelve con su ID asignado
-routerProductos.post('/', async (req, res) => {
-    const id = listaProductos.obtenerIDMax()+1;
+routerProductos.post('/',checkAdmin, async (req, res) => {
     const prod = new Producto(
-        id,
+        0,
         req.body.name,
         req.body.description,
         req.body.code,
@@ -44,19 +45,14 @@ routerProductos.post('/', async (req, res) => {
         req.body.stock,
         req.body.thumbnail
         );
-    productosApi.save(prod);
-    let all = await productosApi.getAll()
-    res.json(all)
-    //listaProductos.agregarProducto(prod)
-    //res.json(listaProductos.listarProductoPorID(id))
+    nuevo = await productosApi.save(prod);
+    res.json(nuevo)
 })
 
 //Recibe y actualiza un producto según su ID
-routerProductos.put('/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    let prod = listaProductos.listarProductoPorID(id)
-    if(prod != null){
-        listaProductos.borrarProductoPorID(id)
+routerProductos.put('/:id', checkAdmin,(req, res) => {
+    const id = req.params.id;
+    if(productosApi.exist(id)){
         prod = new Producto(
             id,
             req.body.name,
@@ -66,7 +62,7 @@ routerProductos.put('/:id', (req, res) => {
             req.body.stock,
             req.body.stock
             );
-        listaProductos.agregarProducto(prod)
+        productosApi.updateById(id,prod);
         res.json({
             result: 'Actualizado',
             producto: prod,
@@ -79,9 +75,8 @@ routerProductos.put('/:id', (req, res) => {
 })
 
 //Elimina un producto según su ID
-routerProductos.delete('/:id', (req, res) => {
+routerProductos.delete('/:id',checkAdmin, (req, res) => {
     const id = req.params.id
-    // listaProductos.borrarProductoPorID(id)
     productosApi.deleteById(id);
     res.json({
         result: 'Borrado',
