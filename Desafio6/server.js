@@ -6,7 +6,7 @@ const handlebars = require('express-handlebars');
 const Clases = require('./Producto');
 const path = require('path');
 const Repositorio = require('./Repositorio')
-//const Archivo = require('./Archivo');
+const {faker} = require('@faker-js/faker')
 
 
 const Producto = Clases.Producto;
@@ -53,9 +53,34 @@ io.on('connection', socket=>{
 })
 
 app.get('/', (req, res) => {
-
     res.render('index');
-
 });
+
+app.get('/api/productos-test', (req,res) => {
+    const productosTest = [];
+    for (let index = 0; index < 5; index++) {
+        productosTest.push({
+            id: index+1,
+            name: faker.commerce.productName(),
+            price: faker.commerce.price(),
+            thumbnail: faker.image.imageUrl()
+        })
+    }
+    res.render('test',{productosTest});
+})
+
+// app.get('/api/productos-test', (req,res) => {
+//     const productosTest = [];
+//     for (let index = 0; index < 5; index++) {
+//         productosTest.push({
+//             id: index+1,
+//             name: faker.commerce.productName(),
+//             price: faker.commerce.price(),
+//             thumbnail: faker.image.imageUrl()
+//         })
+//     }
+//     products = productosTest;
+//     res.render('test');
+// })
 
 app.use(express.static("public"))

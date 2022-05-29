@@ -17,5 +17,8 @@
     "nodemon": "^2.0.15",
     "socket.io": "^4.4.1",
     "sqlite3": "^5.0.4"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.1.0"
   }
 }
