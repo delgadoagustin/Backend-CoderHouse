@@ -6,7 +6,20 @@ const handlebars = require('express-handlebars');
 const Clases = require('./Producto');
 const path = require('path');
 const Repositorio = require('./Repositorio')
+//MOCKS
 const {faker} = require('@faker-js/faker')
+
+//Cookies y Sessions
+const cookieParser = require('cookie-parser');
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
+const advancedOptions = { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true 
+}
+
+
+
 
 
 const Producto = Clases.Producto;
@@ -22,6 +35,18 @@ let messages = mensajes.getAll();
 const app = express();
 const httpServer = new HttpServer(app);
 const io = new IOServer(httpServer);
+
+//Mongo Atlas Session
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: '',
+        mongoOptions: advancedOptions
+    }),
+    secret: 'asdasd',
+    resave: false,
+    saveUninitialized: false
+}))
+
 
 app.engine('hbs', handlebars.engine({
     extname: '.hbs',
@@ -53,7 +78,10 @@ io.on('connection', socket=>{
 })
 
 app.get('/', (req, res) => {
-    res.render('index');
+    if(!req.session.user){
+        res.redirect('/login')
+    }
+    res.render('index',{username: req.session.user});
 });
 
 app.get('/api/productos-test', (req,res) => {
@@ -82,5 +110,21 @@ app.get('/api/productos-test', (req,res) => {
 //     products = productosTest;
 //     res.render('test');
 // })
+
+
+//Log-In 
+app.get('/login', (req,res)=>{
+    res.render('login')
+})
+
+app.post('/auth', (req,res)=>{
+    const username = req.query.username;
+    req.session.user = username;
+    res.redirect('/');
+})
+
+app.get('/logout', (req,res)=>{
+    
+})
 
 app.use(express.static("public"))
