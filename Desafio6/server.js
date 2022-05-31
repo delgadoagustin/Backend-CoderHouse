@@ -12,7 +12,9 @@ const {faker} = require('@faker-js/faker')
 //Cookies y Sessions
 const cookieParser = require('cookie-parser');
 const session = require('express-session')
-const MongoStore = require('connect-mongo')
+const MongoStore = require('connect-mongo');
+const exp = require('constants');
+const { Cookie } = require('express-session');
 const advancedOptions = { 
     useNewUrlParser: true, 
     useUnifiedTopology: true 
@@ -36,15 +38,21 @@ const app = express();
 const httpServer = new HttpServer(app);
 const io = new IOServer(httpServer);
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 //Mongo Atlas Session
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: '',
+        mongoUrl: '',//CLAVE BORRADA
         mongoOptions: advancedOptions
     }),
     secret: 'asdasd',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
 }))
 
 
@@ -81,7 +89,10 @@ app.get('/', (req, res) => {
     if(!req.session.user){
         res.redirect('/login')
     }
-    res.render('index',{username: req.session.user});
+    else{
+        res.render('index',{username: req.session.user});
+    }
+    
 });
 
 app.get('/api/productos-test', (req,res) => {
@@ -118,12 +129,23 @@ app.get('/login', (req,res)=>{
 })
 
 app.post('/auth', (req,res)=>{
-    const username = req.query.username;
+    const username = req.body.username;
     req.session.user = username;
     res.redirect('/');
 })
 
 app.get('/logout', (req,res)=>{
+    if(!req.session.user){
+        res.redirect('/login')
+    }
+    else{
+        const nombre = req.session.user
+        req.session.destroy(err => {
+            if(!err){
+                res.send(`Hasta Luego ${nombre}!!`)
+            }
+        })
+    }
     
 })
 
