@@ -14,6 +14,10 @@ import productRouter from './src/routes/productos.js'
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
+import { Producto, Productos } from './src/database/Producto.js';
+import { Repositorio } from './src/database/repositorio.js';
+import { options } from './src/options/mariaDB.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -21,10 +25,15 @@ const __dirname = dirname(__filename);
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-const advancedOptions = { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true 
-}
+
+//////////////////////////////////////////////////////////////////
+
+const productos = new Repositorio(options,'productos');
+const mensajes = new Repositorio(options,'mensajes');
+
+let products = productos.getAll();
+let messages = mensajes.getAll();
+//////////////////////////////////////////////////////////////////
 
 server.listen(8080, ()=>{
     console.log("Servidor corriendo en http://localhost:8080");
@@ -32,36 +41,38 @@ server.listen(8080, ()=>{
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
 
-app.use('/api', apiRouter);
-app.use(authRouter);
-app.use(productRouter)
+//PASSPORT
+
 
 //SESSION
-// app.use(session({
-//     store: MongoStore.create({
-//         mongoUrl: '',//CLAVE BORRADA
-//         mongoOptions: advancedOptions
-//     }),
-//     secret: 'asdasd',
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//         expires: 600000
-//     }
-// }));
+const advancedOptions = { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true 
+}
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: '',//CLAVE BORRADA
+        mongoOptions: advancedOptions
+    }),
+    secret: 'asdasd',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
+}));
 
-//VIEW
+//TEMPLATES
 app.engine('hbs', handlebars.engine({
     extname: '.hbs',
-    layoutsDir: __dirname + '/public/views/layout'
+    layoutsDir: __dirname + '/src/views/layout'
 }));
 app.set('view engine','hbs');
-app.set('views',path.resolve(__dirname,'./public/views'));
+app.set('views',path.resolve(__dirname,'./src/views'));
 
 
-//SOCKET (MOVER)
+//SOCKET (REORDENAR)
 io.on('connection', socket=>{
     console.log('Un cliente se ha conectado');
     socket.emit('messages',messages)
@@ -80,3 +91,6 @@ io.on('connection', socket=>{
     });
 })
 
+app.use('/api', apiRouter);
+app.use( authRouter );
+app.use( productRouter )

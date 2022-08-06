@@ -51,3 +51,5 @@ class Repositorio{
         }
     }
 }
+
+export {Repositorio}

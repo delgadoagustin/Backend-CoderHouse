@@ -9,4 +9,4 @@ const options = {
     }
 }
 
-module.exports = { options };
+export {options}
