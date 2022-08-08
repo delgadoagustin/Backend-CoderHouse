@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import usuariosRepo from '../models/usuarios/mongoDbUsuarios.js';
+import passport from './../services/passport/passport-local.js'
 
 //BCRYPT
 async function createHash(password) {
@@ -39,9 +40,11 @@ router.get('/login', (req,res)=>{
 })
 
 //AUTENTICACION
-router.post('/auth', (req,res)=>{
+router.post('/auth',passport.authenticate('login',{
+    failureRedirect: '/login',
+}), (req,res)=>{
     const {username, password} = req.body;
-    req.session.user = username;
+    //req.session.user = username;
     res.redirect('/');
 })
 

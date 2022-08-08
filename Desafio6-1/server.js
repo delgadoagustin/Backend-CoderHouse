@@ -18,6 +18,9 @@ import { Producto, Productos } from './src/database/Producto.js';
 import { Repositorio } from './src/database/repositorio.js';
 import { options } from './src/options/mariaDB.js';
 
+import passport from './src/services/passport/passport-local.js';
+
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -42,9 +45,6 @@ server.listen(8080, ()=>{
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//PASSPORT
-
-
 //SESSION
 const advancedOptions = { 
     useNewUrlParser: true, 
@@ -62,6 +62,11 @@ app.use(session({
         expires: 600000
     }
 }));
+
+//PASSPORT
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 //TEMPLATES
 app.engine('hbs', handlebars.engine({
