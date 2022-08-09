@@ -1,4 +1,10 @@
 //IMPORT
+import config from './config.js';
+
+import minimist from 'minimist';
+const defaultArgs = { default: {puerto: 8080}}
+const puerto = minimist(process.argv.slice(2),defaultArgs).puerto
+
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -10,11 +16,13 @@ import handlebars from 'express-handlebars'
 import apiRouter from './src/routes/api.js';
 import authRouter from './src/routes/auth.js';
 import productRouter from './src/routes/productos.js'
+import infoRouter from './src/routes/info.js'
+import apinbRouter from './src/routes/api-nb.js'
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-import { Producto, Productos } from './src/database/Producto.js';
+
 import { Repositorio } from './src/database/repositorio.js';
 import { options } from './src/options/mariaDB.js';
 
@@ -38,8 +46,8 @@ let products = productos.getAll();
 let messages = mensajes.getAll();
 //////////////////////////////////////////////////////////////////
 
-server.listen(8080, ()=>{
-    console.log("Servidor corriendo en http://localhost:8080");
+server.listen(puerto/*||config.PORT*/, ()=>{
+    console.log(`Servidor corriendo en http://localhost:${puerto}`);
 });
 
 app.use(express.json());
@@ -50,9 +58,10 @@ const advancedOptions = {
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 }
+
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: '',//CLAVE BORRADA
+        mongoUrl: config.mongoURL,
         mongoOptions: advancedOptions
     }),
     secret: 'asdasd',
@@ -99,3 +108,5 @@ io.on('connection', socket=>{
 app.use('/api', apiRouter);
 app.use( authRouter );
 app.use( productRouter )
+app.use( infoRouter )
+app.use( apinbRouter)

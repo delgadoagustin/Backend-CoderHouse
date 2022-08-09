@@ -1,25 +1,34 @@
 import { Strategy as LocalStrategy } from "passport-local";
-import passport, { use } from "passport";
+import passport from "passport";
 import usuariosRepo from "./../../models/usuarios/mongoDbUsuarios.js"
+import bcrypt_functions from "./../bcrypt/bcrypt.js"
+import bcrypt from "bcrypt"
 
 
-passport.use(new LocalStrategy(
+passport.use('login',new LocalStrategy(
     function(username, password, done) {
-        usuariosRepo.collection.findOne({ username: username }, function (err, user) {
+        console.log
+        usuariosRepo.collection.findOne({ email: username }, function (err, user) {
             if (err) { return done(err); }
             if (!user) { return done(null, false); }
-            //if (!user.verifyPassword(password)) { return done(null, false); }
-            return done(null, user);
+            return bcrypt.compare(password,user.password,()=>{
+                if(err){
+                    return done(null,false)
+                }
+                return done(null,user)
+            })
         });
     }
 ));
 
 passport.serializeUser((user,done)=>{
-    done(null,user._id)
+    done(null,user.id)
 })
 
 passport.deserializeUser((id,done)=>{
-    usuariosRepo.collection.findById(id,done);
+    usuariosRepo.collection.findById(id,(err,user)=>{
+        done(err,user);
+    });
 })
 
 export default passport;
