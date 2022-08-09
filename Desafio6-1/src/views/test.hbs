@@ -1,0 +1,17 @@
+<table class="table m-3">
+        <tr>
+            <th>NOMBRE</th>
+            <th>PRECIO</th>
+            <th>IMAGEN</th>    
+        </tr>
+        <tbody id="products">
+        {{#each productosTest}}
+            <tr>    
+                {{!-- <td>{{this.id}}</td> --}}
+                <td>{{this.name}}</td>
+                <td>{{this.price}}</td>
+                <td><img src={{this.thumbnail}} alt="" srcset=""></td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>    

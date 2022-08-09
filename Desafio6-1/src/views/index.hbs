@@ -1,0 +1,51 @@
+<div>
+    <h2>Bienvenido {{username}} </h2>
+    <form action="/logout" method="get">
+        <input type="submit" value="Desloguear">
+    </form>
+</div>
+
+<h1>Formulario de Productos</h1>
+<form onsubmit="return addProduct(this)">
+    <div class="mb-3 m-3">
+        <label for="name" class="form-label">Nombre: </label>
+        <input name="name" id="name" type="text" class="form-control">
+    </div>
+    <div class="mb-3 m-3">
+        <label for="price" class="form-label">Precio: </label>
+        <input name="price" id="price" type="number" class="form-control">
+    </div>
+    <div class="mb-3 m-3">
+        <label for="thumbnail" class="form-label">Imagen URL: </label>
+        <input name="thumbnail" id="thumbnail" type="text" class="form-control">
+    </div>
+        
+    <input type="submit" value="Agregar" class="m-3 btn btn-primary">
+    <table class="table m-3">
+        <tr>
+            <th>NOMBRE</th>
+            <th>PRECIO</th>
+            <th>IMAGEN</th>    
+        </tr>
+        <tbody id="products">
+            <td>Empty</td>
+            <td>Empty</td>
+            <td>Empty</td>
+        </tbody>
+    </table>    
+</form>
+
+
+<form onsubmit="return addMessage(this)">
+    <div class="mb-3 m-3">
+        <label for="username" class="form-label">Correo: </label>
+        <input name="username" id="username" type="text" class="form-control" placeholder="Email">
+    </div>
+    <br>
+    <div id="messages" class="alert alert-secondary mb-3 m-3"></div>
+    <div class="mb-3 m-3">
+        <label for="texto" class="form-label">Mensaje: </label>
+        <input name="texto" id="texto" type="text" class="form-control" placeholder="Ingresá un mensaje...">
+    </div>
+    <input type="submit" value="Enviar" class="m-3 btn btn-primary">
+</form>
