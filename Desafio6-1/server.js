@@ -3,7 +3,7 @@ import config from './config.js';
 
 import minimist from 'minimist';
 const defaultArgs = { default: {puerto: 8080}}
-const puerto = minimist(process.argv.slice(2),defaultArgs).puerto
+let puerto = minimist(process.argv.slice(2),defaultArgs).puerto
 
 import express from 'express';
 import http from 'http';
@@ -28,6 +28,25 @@ import { options } from './src/options/mariaDB.js';
 
 import passport from './src/services/passport/passport-local.js';
 
+//CLUSTER------------------
+import cluster from 'cluster';
+import os from "os"
+
+const numCPUs = os.cpus().length;
+
+if (cluster.isPrimary) {
+    console.log(`Master ${process.pid} is running`)
+    console.log(numCPUs)
+    for (let i = 0; i < numCPUs; i++) {
+        cluster.fork({port: puerto+i});
+    }
+}
+else{
+    puerto++;
+    console.log(`Worker ${process.pid} started`)
+}
+//END CLUSTEr--------------------
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -46,7 +65,7 @@ let products = productos.getAll();
 let messages = mensajes.getAll();
 //////////////////////////////////////////////////////////////////
 
-server.listen(puerto/*||config.PORT*/, ()=>{
+server.listen(puerto, ()=>{
     console.log(`Servidor corriendo en http://localhost:${puerto}`);
 });
 
